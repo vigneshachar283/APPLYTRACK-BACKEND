@@ -1,5 +1,9 @@
 const User = require("./../models/User")
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+
+require("dotenv").config();
+
 
 const registeruser = async(req,res)=>{
  try{
@@ -48,7 +52,22 @@ if(!existingUser){
 const login = await  bcrypt.compare(password,existingUser.password);
 
 if(login){
-    res.status(200).send("Login Succesfull");
+  
+
+    const token = jwt.sign(
+    { id: existingUser._id },
+    process.env.JWT_SECRET,
+    { expiresIn: "1d" }
+);
+
+  res.status(200).json({
+    "message":"Login Successfull",
+    token:token
+  })
+
+
+
+
 }
 else{
     res.status(401).send("Incorrect Password");
@@ -69,4 +88,4 @@ else{
 
 
 
-module.exports={registeruser};
+module.exports={registeruser,loginUser};
