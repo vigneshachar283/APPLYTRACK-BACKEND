@@ -33,8 +33,37 @@ const registeruser = async(req,res)=>{
  }
 }
 
-const registerUser =(req,res)=>{
-    
+const loginUser = async (req,res)=>{
+
+try{
+const { email,password}=req.body;
+
+const existingUser = await User.findOne({email});
+
+if(!existingUser){
+    res.status(401).send("USER NOT FOUND ");
+    return ;
+}
+
+const login = await  bcrypt.compare(password,existingUser.password);
+
+if(login){
+    res.status(200).send("Login Succesfull");
+}
+else{
+    res.status(401).send("Incorrect Password");
+}
+
+}catch(err){
+
+    res.status(500).json({
+        "message":" Internal server Error",
+        error:err.message
+    })
+
+}
+   
+
 }
 
 
