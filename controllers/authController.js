@@ -29,7 +29,8 @@ const registeruser = async(req,res)=>{
 
     res.status(201).json({
         "message":"user created succesfully",
-        user:newUser
+        name : name ,
+        email :email
     })
 }catch(err){
     res.status(500).json({ message :"Internal server error",

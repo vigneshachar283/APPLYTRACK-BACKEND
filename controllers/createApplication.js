@@ -75,6 +75,16 @@ const getApplicationsbyid = async (req, res) => {
 
 
 const updateApplication = async (req, res) => {
+    const {
+    company,
+    role,
+    status,
+    location,
+    jobType,
+    jobLink,
+    notes
+} = req.body;
+
     try {
         const updateApplication = await Application.updateOne({
              _id: req.params.id,
