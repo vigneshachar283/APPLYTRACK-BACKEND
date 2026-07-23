@@ -36,13 +36,36 @@ const createApplication = async (req, res) => {
 
 const getApplications = async (req, res) => {
     try {
-        
-        const applications = await Application.find({
+        const page = Number(req.query.page) || 1;
+        const limit = Number(req.query.limit) || 10;
+        const skip = (page - 1) * limit;
+
+        let sortOption = { createdAt: -1 };
+
+        if (req.query.sort === "oldest") {
+    sortOption = { createdAt: 1 };
+}
+
+        const total = await Application.countDocuments({
             owner: req.user.id
         });
 
+        const totalPages = Math.ceil(total / limit);
+
+        const applications = await Application.find({
+            owner: req.user.id
+        })
+        .skip(skip)
+        .limit(limit).sort(sortOption);
+
         return res.status(200).json({
-            applications
+            applications,
+            pagination: {
+                total,
+                page,
+                limit,
+                totalPages
+            }
         });
 
     } catch (err) {
@@ -52,7 +75,6 @@ const getApplications = async (req, res) => {
         });
     }
 };
-
 
 const getApplicationsbyquery = async (req, res) => {
     try {
@@ -66,7 +88,11 @@ const getApplicationsbyquery = async (req, res) => {
             query.status = req.query.status;
         }
 
-        console.log("MongoDB query =", query);
+        if (req.query.status) {
+    query.status = req.query.status;
+}
+
+    
 
         const applications = await Application.find(query);
 
