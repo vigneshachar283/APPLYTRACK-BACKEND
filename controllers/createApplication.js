@@ -52,4 +52,72 @@ const getApplications = async (req, res) => {
     }
 };
 
-module.exports={createApplication,getApplications}
+const getApplicationsbyid = async (req, res) => {
+    try {
+        const applications = await Application.findOne({
+             _id: req.params.id,
+            owner: req.user.id
+        });
+
+        
+
+        return res.status(200).json({
+            applications
+        });
+
+    } catch (err) {
+        return res.status(500).json({
+            message: "Internal server error",
+            error: err.message
+        });
+    }
+};
+
+
+const updateApplication = async (req, res) => {
+    try {
+        const updateApplication = await Application.updateOne({
+             _id: req.params.id,
+            owner: req.user.id
+        }, {
+        $set: req.body
+    });
+
+        
+
+        return res.status(200).json({
+            updateApplication
+        });
+
+    } catch (err) {
+        return res.status(500).json({
+            message: "Internal server error",
+            error: err.message
+        });
+    }
+};
+
+
+const deleteApplication = async (req, res) => {
+    try {
+        const deleteApplication = await Application.deleteOne({
+             _id: req.params.id,
+            owner: req.user.id
+        
+    });
+
+        
+
+        return res.status(200).json({
+           deleteApplication
+        });
+
+    } catch (err) {
+        return res.status(500).json({
+            message: "Internal server error",
+            error: err.message
+        });
+    }
+};
+
+module.exports={createApplication,getApplications,getApplicationsbyid,updateApplication,deleteApplication};
