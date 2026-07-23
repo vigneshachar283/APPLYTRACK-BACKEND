@@ -36,6 +36,7 @@ const createApplication = async (req, res) => {
 
 const getApplications = async (req, res) => {
     try {
+        
         const applications = await Application.find({
             owner: req.user.id
         });
@@ -51,6 +52,40 @@ const getApplications = async (req, res) => {
         });
     }
 };
+
+
+const getApplicationsbyquery = async (req, res) => {
+    try {
+        console.log("req.query =", req.query);
+
+        const query = {
+            owner: req.user.id
+        };
+
+        if (req.query.status) {
+            query.status = req.query.status;
+        }
+
+        console.log("MongoDB query =", query);
+
+        const applications = await Application.find(query);
+
+        console.log("Found applications =", applications);
+
+        return res.status(200).json({
+            applications
+        });
+
+    } catch (err) {
+        return res.status(500).json({
+            message: "Internal server error",
+            error: err.message
+        });
+    }
+};
+
+
+
 
 const getApplicationsbyid = async (req, res) => {
     try {
@@ -130,4 +165,4 @@ const deleteApplication = async (req, res) => {
     }
 };
 
-module.exports={createApplication,getApplications,getApplicationsbyid,updateApplication,deleteApplication};
+module.exports={createApplication,getApplications,getApplicationsbyid,updateApplication,deleteApplication,getApplicationsbyquery};
