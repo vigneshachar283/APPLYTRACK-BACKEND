@@ -16,7 +16,6 @@ const {getApplicationsbyquery} =require("./../controllers/createApplication")
 
 router.post("/apply", authMiddleware, createApplication);
 router.get("/myapply", authMiddleware, getApplications);
-router.get("/apply", authMiddleware, getApplicationsbyquery);
 router.get("/:id", authMiddleware, getApplicationsbyid);
 router.patch("/:id", authMiddleware, updateApplication);
 router.delete("/:id", authMiddleware, deleteApplication);

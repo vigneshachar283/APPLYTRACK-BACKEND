@@ -43,20 +43,45 @@ const getApplications = async (req, res) => {
         let sortOption = { createdAt: -1 };
 
         if (req.query.sort === "oldest") {
-    sortOption = { createdAt: 1 };
-}
+            sortOption = { createdAt: 1 };
+        }
 
-        const total = await Application.countDocuments({
+        const query = {
             owner: req.user.id
-        });
+        };
 
+        if (req.query.status) {
+            query.status = req.query.status;
+        }
+
+        if (req.query.company) {
+            query.company = req.query.company;
+        }
+
+        if (req.query.search) {
+            query.$or = [
+                {
+                    company: {
+                        $regex: req.query.search,
+                        $options: "i"
+                    }
+                },
+                {
+                    role: {
+                        $regex: req.query.search,
+                        $options: "i"
+                    }
+                }
+            ];
+        }
+
+        const total = await Application.countDocuments(query);
         const totalPages = Math.ceil(total / limit);
 
-        const applications = await Application.find({
-            owner: req.user.id
-        })
-        .skip(skip)
-        .limit(limit).sort(sortOption);
+        const applications = await Application.find(query)
+            .sort(sortOption)
+            .skip(skip)
+            .limit(limit);
 
         return res.status(200).json({
             applications,
@@ -76,39 +101,6 @@ const getApplications = async (req, res) => {
     }
 };
 
-const getApplicationsbyquery = async (req, res) => {
-    try {
-        console.log("req.query =", req.query);
-
-        const query = {
-            owner: req.user.id
-        };
-
-        if (req.query.status) {
-            query.status = req.query.status;
-        }
-
-        if (req.query.status) {
-    query.status = req.query.status;
-}
-
-    
-
-        const applications = await Application.find(query);
-
-        console.log("Found applications =", applications);
-
-        return res.status(200).json({
-            applications
-        });
-
-    } catch (err) {
-        return res.status(500).json({
-            message: "Internal server error",
-            error: err.message
-        });
-    }
-};
 
 
 
@@ -191,4 +183,4 @@ const deleteApplication = async (req, res) => {
     }
 };
 
-module.exports={createApplication,getApplications,getApplicationsbyid,updateApplication,deleteApplication,getApplicationsbyquery};
+module.exports={createApplication,getApplications,getApplicationsbyid,updateApplication,deleteApplication};

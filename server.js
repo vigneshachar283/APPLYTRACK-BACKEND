@@ -11,6 +11,7 @@ const appRoutes=require("./routes/appRoutes")
 
 app.use(express.json());
 
+
 app.use("/user",router);
 
 app.use("/user",appRoutes)
