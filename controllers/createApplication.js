@@ -110,7 +110,7 @@ const getApplicationsbyid = async (req, res) => {
         const applications = await Application.findOne({
              _id: req.params.id,
             owner: req.user.id
-        });
+    });
 
         
 
