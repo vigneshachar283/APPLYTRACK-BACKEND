@@ -117,8 +117,7 @@ const getApplicationsbyid = async (req, res) => {
         return res.status(200).json({
             applications
         });
-
-    } catch (err) {
+} catch (err) {
         return res.status(500).json({
             message: "Internal server error",
             error: err.message
