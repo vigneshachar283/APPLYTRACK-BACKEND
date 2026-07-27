@@ -112,8 +112,6 @@ const getApplicationsbyid = async (req, res) => {
             owner: req.user.id
     });
 
-        
-
         return res.status(200).json({
             applications
         });
