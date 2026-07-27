@@ -101,10 +101,6 @@ const getApplications = async (req, res) => {
     }
 };
 
-
-
-
-
 const getApplicationsbyid = async (req, res) => {
     try {
         const applications = await Application.findOne({
